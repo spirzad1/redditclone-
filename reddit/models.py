@@ -14,7 +14,7 @@ class PostDB(db.Model):
     context = db.Column(db.String(1000), nullable=False)
     author = db.Column(db.ForeignKey('users.username'), nullable=False)
     num_likes = db.Column(db.Integer, nullable=False)
-    time = db.Column(db.Time, nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
 
 class CommentDB(db.Model):
     __tablename__ = 'comments'
@@ -23,7 +23,7 @@ class CommentDB(db.Model):
     author = db.Column(db.ForeignKey('users.username'), nullable=False)
     post_id = db.Column(db.ForeignKey('posts.id'), nullable=False)
     num_likes = db.Column(db.Integer, nullable=False)
-    time = db.Column(db.Time, nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
 
 class LikeDB(db.Model):
     __tablename__ = 'likes'
