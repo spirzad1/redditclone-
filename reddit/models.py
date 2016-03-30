@@ -1,6 +1,5 @@
 from reddit import app, db
 
-#TODO cmeheck ForeignKey syntax
 class UserDB(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -30,7 +29,7 @@ class LikeDB(db.Model):
     __tablename__ = 'likes'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     username = db.Column(db.ForeignKey("users.id"), nullable=False)
-    postorcomment = db.Column(db.Integer, nullable=False) #TODO see if there's a boolean type
+    postorcomment = db.Column(db.Integer, nullable=False) 
     comment_id = db.Column(db.ForeignKey("comments.id"), nullable=False)
     post_id = db.Column(db.ForeignKey("posts.id"), nullable=False)
     type_like = db.Column(db.String(1), nullable=False)
@@ -51,4 +50,4 @@ class UserTagDB(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     tag_id = db.Column(db.ForeignKey("tags.id"), nullable=False)
     username = db.Column(db.ForeignKey("users.username"), nullable=False)
-    weight = db.Column(db.Integer, nullable=False
+    weight = db.Column(db.Integer, nullable=False)
