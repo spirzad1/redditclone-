@@ -3,7 +3,7 @@ from reddit import app, db
 class UserDB(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    username = db.Column(db.String(24), nullable=False)
+    username = db.Column(db.String(24), unique_key=True,nullable=False)
     email = db.Column(db.String(48), nullable=False)
     pass_hash = db.Column(db.String(128), nullable=False)
 
@@ -28,7 +28,7 @@ class CommentDB(db.Model):
 class LikeDB(db.Model):
     __tablename__ = 'likes'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    username = db.Column(db.String(24), db.ForeignKey('users.id'), nullable=False)
+    username = db.Column(db.String(24), db.ForeignKey('users.username'), nullable=False)
     postorcomment = db.Column(db.Integer, nullable=False) 
     comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
