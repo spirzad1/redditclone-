@@ -1,0 +1,22 @@
+<html>
+
+<head>
+  <title>Reddit</title>
+</head>
+
+<body>
+  <h1>Dope Homepage<h1>
+
+  {% if current_user.is_authenticated %}
+    <h2>Hi {{ current_user.username}}! :D</h2>
+    <br><br>
+    <a href="{{ url_for('logout') }}">Log Out</a>
+  {% else %}
+    <h2>Hi :D</h2>
+    <a href="{{ url_for('register') }}">Login or Signup</a>
+  {% endif %}
+
+</body>
+
+
+</html>
