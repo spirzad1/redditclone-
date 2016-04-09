@@ -3,6 +3,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from flask import request, render_template,redirect, url_for
 from reddit import app, db, lm
 from models import *
+from datetime import datetime
 
 @lm.user_loader
 def load_user(id):
@@ -57,19 +58,33 @@ def tag(tag):
     if tag_list is None:
         return render_template('error.html')
     #try to get id of the tag
-    #posts_list = PostTagDB.query(TagDB,UserTagDB).join(TagDB).join(UserTagDB)).filter(tag_id=first_tag.id).all()
+    posts_list = PostTagDB.query(TagDB,UserTagDB).join(TagDB).filter_by(tag_id=first_tag.id).all()
+    return str("Tag is " + posts_list)
 
-    return str("Tag is " + tag)
 
+@app.route('/write', methods=['GET', 'POST'])
+def write():
+    if request.method == 'GET':
+        return render_template('index.html')
+    if request.method == 'POST':
+        title = request.form.get('title')
+        context = request.form.get('context')
 
-@app.route('/tags')
-def get_tag(tag):
-    return str("Tag page!")
+        post = PostDB(title=title, author=current_user.username, context=context,num_likes=0, time=datetime.now())
+        db.session.add(post)
+        db.session.commit()
+
+        return str("Title: " + title + "\nMessage: " + context + "\nAuthor: " + current_user.username)#can have a variable to display success?
+    return render_template('index.html')
 
 
 @app.route('/posts/<post>')
 def post(post):
-    return str("Post is " + post)
+    find_post = PostDB.query.filter_by(title=post).first()
+    if post is None:
+        return render_template('error.html')
+
+    return str("Post is " + find_post.title + "Message : " + find_post.context)
 
 
 @app.route('/profile/<username>')
