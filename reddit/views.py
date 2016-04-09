@@ -29,7 +29,7 @@ def register():
                 user = UserDB.query.filter_by(email=email).first()
                 if user is not None:
                     return "email already exists.. pls no"
-                user = UserDB.query.filter_by(username=username)
+                user = UserDB.query.filter_by(username=username).first()
                 if user is not None:
                     return "username is already taken. pls be more creative"
                 user = UserDB(email=email, username=username, pass_hash=password)
@@ -40,7 +40,7 @@ def register():
                 return redirect(url_for('home'))
             
         else: #login
-            user = UserDB.query.filter_by(email=email, username=username, pass_hash=password).first()
+            user = UserDB.query.filter_by(username=username, pass_hash=password).first()
             if user is None:
                 return "user doesnt exist"
             else:
@@ -57,7 +57,7 @@ def tag(tag):
     if tag_list is None:
         return render_template('error.html')
     #try to get id of the tag
-    posts_list = PostTagDB.query(TagDB,UserTagDB).join(TagDB).join(UserTagDB)).filter(tag_id=first_tag.id).all()
+    #posts_list = PostTagDB.query(TagDB,UserTagDB).join(TagDB).join(UserTagDB)).filter(tag_id=first_tag.id).all()
 
     return str("Tag is " + tag)
 
