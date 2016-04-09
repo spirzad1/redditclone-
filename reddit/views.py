@@ -53,7 +53,18 @@ def register():
 
 @app.route('/tags/<tag>')
 def tag(tag):
-    return str("Tag is" + tag)
+    first_tag= TagDB.query.filter_by(name=tag).first()
+    if tag_list is None:
+        return render_template('error.html')
+    #try to get id of the tag
+    posts_list = PostTagDB.query(TagDB,UserTagDB).join(TagDB).join(UserTagDB)).filter(tag_id=first_tag.id).all()
+
+    return str("Tag is " + tag)
+
+
+@app.route('/tags')
+def get_tag(tag):
+    return str("Tag page!")
 
 
 @app.route('/posts/<post>')
