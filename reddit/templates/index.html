@@ -10,6 +10,17 @@
   {% if current_user.is_authenticated %}
     <h2>Hi {{ current_user.username}}! :D</h2>
     <br><br>
+    <h3>Submit a post:<h3>
+    <form action = "{{ url_for('write') }}" name="write" method="POST">
+      Tag<input name="tag" placeholder="" type="text">
+      <br>
+      Title<input name="title" placeholder="" type="text">
+      <br>
+      Content<input name="context" placeholder="" type="text">
+      <br>
+      <button type="submit">Submit Post</button>
+    </form>
+    <br>
     <a href="{{ url_for('logout') }}">Log Out</a>
   {% else %}
     <h2>Hi :D</h2>
