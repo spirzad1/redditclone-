@@ -12,7 +12,7 @@ class PostDB(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     title = db.Column(db.String(50), nullable=False)
-    context = db.Column(db.String(1000), nullable=False)
+    content = db.Column(db.String(1000), nullable=False)
     author = db.Column(db.String(24), db.ForeignKey('users.username'), nullable=False)
     num_likes = db.Column(db.Integer, nullable=False)
     time = db.Column(db.DateTime, nullable=False)
@@ -20,7 +20,7 @@ class PostDB(db.Model):
 class CommentDB(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    content = db.Column(db.String(1000), nullable=False)
+    content = db.Column(db.String(250), nullable=False)
     author = db.Column(db.String(24), db.ForeignKey('users.username'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
     num_likes = db.Column(db.Integer, nullable=False)
@@ -30,10 +30,10 @@ class LikeDB(db.Model):
     __tablename__ = 'likes'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     username = db.Column(db.String(24), db.ForeignKey('users.username'), nullable=False)
-    postorcomment = db.Column(db.Integer, nullable=False) 
+    post_or_comment = db.Column(db.Integer, nullable=False)
     comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
-    type_like = db.Column(db.String(1), nullable=False)
+    type = db.Column(db.Boolean, nullable=False)
 
 class TagDB(db.Model):
     __tablename__ = 'tags'

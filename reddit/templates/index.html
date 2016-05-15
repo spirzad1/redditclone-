@@ -16,16 +16,22 @@
       <br>
       Title<input name="title" placeholder="" type="text">
       <br>
-      Content<input name="context" placeholder="" type="text">
+      Content<input name="content" placeholder="" type="text">
       <br>
       <button type="submit">Submit Post</button>
     </form>
     <br>
     <a href="{{ url_for('logout') }}">Log Out</a>
   {% else %}
+
+
     <h2>Hi :D</h2>
     <a href="{{ url_for('register') }}">Login or Signup</a>
   {% endif %}
+
+  {% for post in posts %}
+    <h2>Post: {{ post.title }} </h2>
+  {% endfor %}
 
 </body>
 
