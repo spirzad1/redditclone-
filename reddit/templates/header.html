@@ -1,4 +1,3 @@
-<!--
 <html>
 
 <head>
@@ -12,23 +11,19 @@
   {% if current_user.is_authenticated %}
     <h2>Hi {{ current_user.username}}! :D</h2>
     <a href="{{ url_for('write') }}">Submit a Post</a>
-    <br><br>
+    <br>
+    <a href="{{ url_for('profile', username=current_user.username) }}">Profile</a>
     <br>
     <a href="{{ url_for('logout') }}">Log Out</a>
+    <br><br>
   {% else %}
     <h2>Hi :D</h2>
     <a href="{{ url_for('register') }}">Login or Signup</a>
   {% endif %}
-//-->
-{% extends "header.html" %}
-{% block content %}
 
-  {% for post in posts %}
-    <h2>Post: {{ post.title }} </h2>
-    <h2>{{ post.author }} </h2>
-    <h2>{{ post.content }} </h2>
-  {% endfor %}
+  {% block content %}{% endblock %}
+  
+</body>
 
 
-
-{% endblock %}
+</html>

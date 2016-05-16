@@ -1,0 +1,11 @@
+{% extends "header.html" %}
+{% block content %}
+  <h1>{{ tag }}</h2>
+  <br><br>
+  {% for post in posts %}
+    <h2>Posts: {{ post.title }} </h2>
+    <h2>{{ post.author }} </h2>
+    <h2>{{ post.content }} </h2>
+  {% endfor %}
+
+{% endblock %}

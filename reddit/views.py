@@ -14,8 +14,12 @@ def load_user(id):
 def home():
     if request.method == 'GET':
         top_posts = PostDB.query.order_by(desc(PostDB.num_likes)).limit(50).all()
+        if top_posts is None:
+            return render_template('index.html')
         return render_template('index.html', posts=top_posts)
-    return render_template('index.html')
+    if request.method == 'POST':
+        
+        return render_template('write.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -57,18 +61,22 @@ def tag(tag_name):
         return render_template('error.html')
     post_ids = map(lambda x: x['post_id'], PostTagDB.query.filter_by(tag_id=tag.id).all())
     posts = map(lambda x: PostDB.query.filter_by(x), post_ids)
-    return str(posts)
+    return render_template('tags.html', tag=tag_name, posts=posts)
 
 
 @app.route('/write', methods=['GET', 'POST'])
 def write():
     if request.method == 'GET':
-        return render_template('index.html')
+        return render_template('write.html')
     if request.method == 'POST':
         title = request.form.get('title')
         content = request.form.get('content')
+        new_tag = request.form.get('tag')
         post = PostDB(title=title, author=current_user.username, content=content,num_likes=0, time=datetime.now())
         db.session.add(post)
+        tag = TagDB(name=new_tag)
+        db.session.add(tag)
+
         db.session.commit()
         print post.id
         return redirect(url_for('post', post_id=str(post.id)))
@@ -80,8 +88,9 @@ def post(post_id):
         post = PostDB.query.filter_by(id=post_id).first()
         if post is None:
             return render_template('error.html')
+        comments = CommentDB.query.filter_by(post_id=post_id).all()
 
-        return str("Post is " + post.title + "Message : " + post.content)
+        return render_template('post.html', post_title=post.title, author=post.author, content=post.content, comments=comments)
     if request.method == 'POST':
         # User wants to add a comment. Assume user is logged in
         content = request.form.get('content')
@@ -100,27 +109,30 @@ def profile(username):
     if request.method == 'GET':
         user = UserDB.query.filter_by(username=username).first()
         if user is None:
-            return "hah. you suck. try again"
-        return str("User is " + user.username + "\nMail is " + user.email + "\nPassword is" + user.pass_hash)
+            return render_template('profile.html')
+        return render_template('profile.html')
+        #return str("User is " + user.username + "\nMail is " + user.email + "\nPassword is" + user.pass_hash)
     if request.method == 'POST':
         selection = request.form['selection']
         if selection == 'likes':
             post_ids = map(lambda x: x['post_id'], LikeDB.query.filter_by(username=username).all())
-            if post_id is None:
+            if post_ids is None:
                 return "No posts liked"
             posts = map(lambda x: PostDB.query.filter_by(x), post_ids)
-            return str(posts) #returns the list of all the posts that the current user has liked
+            return render_template('profile.html', posts=posts) #returns the list of all the posts that the current user has liked
+
         if selection == 'posts':
             posts = PostDB.query.filter_by(author=username).all()
             if posts is None:
                 return "No posts exist"
-            return str(posts)
+            return render_template('profile.html', posts=posts)
+
         if selection == 'comments':
             comment_ids = map(lambda x: x['comment_id'], LikeDB.query.filter_by(username=username).all())
             if comment_ids is None:
                 return "No comments made"
             comments = map(lambda x: CommentDB.query.filter_by(x), comment_ids)
-            return str(comments) #returns the list of all the comments that the current user has written
+            return render_template('profile.html', posts=comments) #returns the list of all the comments that the current user has written
 
 
 @app.route('/logout')

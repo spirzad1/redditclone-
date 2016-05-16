@@ -1,0 +1,30 @@
+{% extends "header.html" %}
+{% block content %}
+
+  <h1>{{ post_title }}</h1>
+  <h3> {{ author }}</h3>
+  <p> {{content}} </p>
+
+  <h2>Comments:</h2>
+  {% for comment in comments %}
+    <p>{{comment.content}}</p>
+    <h3>{{comment.author}}</h3>
+  {% endfor %}
+
+  {% if current_user.is_authenticated %}
+    <br><br>
+    <h2>Submit a Comment:</h2>
+    <form name="write" method="POST">
+      Content<input name="content" placeholder="" type="text">
+      <br>
+      <button type="submit">Submit Comment</button>
+    </form>
+    <br>
+  {% else %}
+
+
+    <h2>Hi :D</h2>
+    <a href="{{ url_for('register') }}">Login or Signup</a>
+  {% endif %}
+
+  {% endblock %}

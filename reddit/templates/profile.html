@@ -1,0 +1,20 @@
+{% extends "header.html" %}
+{% block content %}
+  {% if current_user.is_authenticated %}
+    <br><br>
+    <form  method="post">
+        <button name="selection" type="submit" value="posts">Posts</button>
+        <button name="selection" type="submit" value="comments">Comments</button>
+        <button name="selection" type="submit" value="likes">Likes</button>
+      </form>
+    <br>
+  {% else %}
+    <h2>Hi :D</h2>
+    <a href="{{ url_for('register') }}">Login or Signup</a>
+  {% endif %}
+
+  {% for post in posts %}
+    <h2>{{post.content}}</h2>
+  {% endfor %}
+
+  {% endblock %}
