@@ -128,10 +128,7 @@ def profile(username):
             return render_template('profile.html', posts=posts)
 
         if selection == 'comments':
-            comment_ids = map(lambda x: x['comment_id'], LikeDB.query.filter_by(username=username).all())
-            if comment_ids is None:
-                return "No comments made"
-            comments = map(lambda x: CommentDB.query.filter_by(x), comment_ids)
+            comments = CommentDB.query.filter_by(author=username).all()
             return render_template('profile.html', posts=comments) #returns the list of all the comments that the current user has written
 
 
