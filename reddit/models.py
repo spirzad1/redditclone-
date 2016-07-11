@@ -31,9 +31,9 @@ class LikeDB(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     username = db.Column(db.String(24), db.ForeignKey('users.username'), nullable=False)
     post_or_comment = db.Column(db.Integer, nullable=False)
-    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
-    type = db.Column(db.Boolean, nullable=False)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=True)
+    like_type = db.Column(db.Boolean, nullable=False)
 
 class TagDB(db.Model):
     __tablename__ = 'tags'

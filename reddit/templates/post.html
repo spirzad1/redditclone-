@@ -1,20 +1,36 @@
 {% extends "header.html" %}
 {% block content %}
 
-  <h1>{{ post_title }}</h1>
-  <h3> {{ author }}</h3>
-  <p> {{content}} </p>
+  <h1>{{ post.title }}</h1>
+  <h3> {{ post.author }}</h3>
+  <p> {{ post.content }} </p>
+
+  {% if current_user.is_authenticated %}
+    <br><br>
+    <form action="{{ url_for('post', post_id=post.id) }}"method="post">
+      <button name="selection" type="submit" value="post_like">Like</button>
+      <button name="selection" type="submit" value="post_dislike">Dislike</button>
+    </form>
+    <br>
+  {% else %}
+    <h2>Hi :D</h2>
+    <a href="{{ url_for('register') }}">Login or Signup to like</a>
+  {% endif %}
 
   <h2>Comments:</h2>
   {% for comment in comments %}
     <p>{{comment.content}}</p>
     <h3>{{comment.author}}</h3>
+    <form action="{{ url_for('post', post_id=post.id) }}" method="post">
+      <button name="selection" type="submit" value="comment_like_{{ comment.id}}">Like</button>
+      <button name="selection" type="submit" value="comment_dislike_{{ comment.id}}">Dislike</button>
+    </form>
   {% endfor %}
 
   {% if current_user.is_authenticated %}
     <br><br>
     <h2>Submit a Comment:</h2>
-    <form name="write" method="POST">
+    <form action="{{ url_for('post', post_id=post.id) }}" name="write" method="POST">
       Content<input name="content" placeholder="" type="text">
       <br>
       <button type="submit">Submit Comment</button>

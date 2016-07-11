@@ -15,8 +15,10 @@ def home():
     if request.method == 'GET':
         top_posts = PostDB.query.order_by(desc(PostDB.num_likes)).limit(50).all()
         if top_posts is None:
-            return render_template('index.html')
-        return render_template('index.html', posts=top_posts)
+            return render_template('header.html')
+        for x in top_posts:
+            print vars(x)
+        return render_template('header.html', posts=top_posts)
     if request.method == 'POST':
         
         return render_template('write.html')
@@ -59,8 +61,13 @@ def tag(tag_name):
     tag = TagDB.query.filter_by(name=tag_name).first()
     if tag is None:
         return render_template('error.html')
-    post_ids = map(lambda x: x['post_id'], PostTagDB.query.filter_by(tag_id=tag.id).all())
-    posts = map(lambda x: PostDB.query.filter_by(x), post_ids)
+    #get all items in PostTagDB that are of ___ tag
+    post_tags = PostTagDB.query.filter_by(tag_id=tag.id).all()
+    #get all post_ids of queried posts from above
+    post_ids = map(lambda x: x.post_id, post_tags)
+    #get all posts of the ids collected above
+    posts = map(lambda x: PostDB.query.filter_by(id=x).all(), post_ids)
+    posts = map(lambda x: x[0], posts)
     return render_template('tags.html', tag=tag_name, posts=posts)
 
 
@@ -69,16 +76,26 @@ def write():
     if request.method == 'GET':
         return render_template('write.html')
     if request.method == 'POST':
+        # Get fields yo
         title = request.form.get('title')
         content = request.form.get('content')
         new_tag = request.form.get('tag')
+        # Create and add post
         post = PostDB(title=title, author=current_user.username, content=content,num_likes=0, time=datetime.now())
         db.session.add(post)
+        # Create and add tag
         tag = TagDB(name=new_tag)
         db.session.add(tag)
-
         db.session.commit()
-        print post.id
+        # Connect the post and the tag
+        existing_tag = TagDB.query.filter_by(name=new_tag).first()
+        if existing_tag is None:
+            post_tag = PostTagDB(tag_id=tag.id, post_id=post.id)
+        else:
+            post_tag = PostTagDB(tag_id=existing_tag.id, post_id=post.id)
+
+        db.session.add(post_tag)
+        db.session.commit()
         return redirect(url_for('post', post_id=str(post.id)))
 
 
@@ -90,17 +107,53 @@ def post(post_id):
             return render_template('error.html')
         comments = CommentDB.query.filter_by(post_id=post_id).all()
 
-        return render_template('post.html', post_title=post.title, author=post.author, content=post.content, comments=comments)
+        return render_template('post.html', post=post, comments=comments)
     if request.method == 'POST':
-        # User wants to add a comment. Assume user is logged in
+        print "hi post"
+        #Adding to LikesDB
+        selection = request.form.get('selection')
         content = request.form.get('content')
-        if content is None:
+        if selection is not None and selection.startswith("post"):
+            print "selection aint none"
+            like_type=True
+            if selection == 'post_dislike':
+                like_type=False
+            like = LikeDB.query.filter_by(username=current_user.username, post_id=post_id).first()
+            if like is None:
+                like = LikeDB(username=current_user.username, post_or_comment=1, post_id=post_id, like_type=like_type)
+                db.session.add(like)
+                db.session.commit()
+            
+            like.like_type = like_type
+            db.session.add(like)
+            db.session.commit()
+
+            return redirect(url_for('post', post_id=post_id))
+        # User wants to add a comment. Assume user is logged in
+        if content is None and selection is None:
             return render_template('error.html')
-        author = current_user.username
-        time = datetime.now()
-        comment = CommentDB(content=content, author=author, post_id=post_id, num_likes=0, time=time)
-        db.session.add(comment)
-        db.session.commit()
+        if content is not None:
+            author = current_user.username
+            time = datetime.now()
+            comment = CommentDB(content=content, author=author, post_id=post_id, num_likes=0, time=time)
+            db.session.add(comment)
+            db.session.commit()
+
+        if selection is not None:
+            print "hi"
+            like_type=True
+            if selection.startswith('comment_dislike'):
+                like_type=False
+            like = LikeDB.query.filter_by(username=current_user.username, comment_id=selection.split("_")[2]).first()
+            if like is None:
+                like = LikeDB(username=current_user.username, post_or_comment=0, comment_id=selection.split("_")[2], like_type=like_type)
+                db.session.add(like)
+                db.session.commit()
+            
+            like.like_type = like_type
+            db.session.add(like)
+            db.session.commit()
+
         return redirect(url_for('post', post_id=post_id))
 
 
@@ -115,10 +168,11 @@ def profile(username):
     if request.method == 'POST':
         selection = request.form['selection']
         if selection == 'likes':
-            post_ids = map(lambda x: x['post_id'], LikeDB.query.filter_by(username=username).all())
-            if post_ids is None:
+            post_ids = map(lambda x: x.post_id, LikeDB.query.filter_by(username=username).all())
+            print len(post_ids)
+            if len(post_ids) is 0:
                 return "No posts liked"
-            posts = map(lambda x: PostDB.query.filter_by(x), post_ids)
+            posts = map(lambda x: PostDB.query.filter_by(id=x).all(), post_ids)
             return render_template('profile.html', posts=posts) #returns the list of all the posts that the current user has liked
 
         if selection == 'posts':

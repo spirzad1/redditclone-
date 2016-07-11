@@ -14,7 +14,8 @@
   {% endif %}
 
   {% for post in posts %}
-    <h2>{{post.content}}</h2>
+  <h1>Title: <br>{{post.title}}</h1>
+  <h2>Post content: <br>{{post.content}}</h2>
     {% if post.post_id %}
       <p>post_id: {{post.post_id}}</p>
     {% endif %}

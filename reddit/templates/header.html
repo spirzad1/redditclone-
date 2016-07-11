@@ -17,8 +17,17 @@
     <a href="{{ url_for('logout') }}">Log Out</a>
     <br><br>
   {% else %}
-    <h2>Hi :D</h2>
+    <h2>Welcome to our Reddit! :D</h2>
     <a href="{{ url_for('register') }}">Login or Signup</a>
+  {% endif %}
+
+  <!-- Printing top 50 posts -->
+  {% if posts is not none  %}
+    {% for post in posts %}
+    <h2>Posts: <a href="/posts/{{post.id}}">{{ post.title }} </a></h2>
+      <h2>{{ post.author }} </h2>
+      <h2>{{ post.content }} </h2>
+    {% endfor %}
   {% endif %}
 
   {% block content %}{% endblock %}
