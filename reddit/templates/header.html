@@ -1,38 +1,14 @@
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>Reddit</title>
-</head>
-
-<body>
-  <h1><a href='/'>Dope Homepage</a></h1>
-
-
-  {% if current_user.is_authenticated %}
-    <h2>Hi {{ current_user.username}}! :D</h2>
-    <a href="{{ url_for('write') }}">Submit a Post</a>
-    <br>
-    <a href="{{ url_for('profile', username=current_user.username) }}">Profile</a>
-    <br>
-    <a href="{{ url_for('logout') }}">Log Out</a>
-    <br><br>
-  {% else %}
-    <h2>Welcome to our Reddit! :D</h2>
-    <a href="{{ url_for('register') }}">Login or Signup</a>
-  {% endif %}
+{% block content %}
 
   <!-- Printing top 50 posts -->
-  {% if posts is not none  %}
+  {% if posts is not none and front%}
     {% for post in posts %}
-    <h2>Posts: <a href="/posts/{{post.id}}">{{ post.title }} </a></h2>
-      <h2>{{ post.author }} </h2>
-      <h2>{{ post.content }} </h2>
+    <h2><a href="/posts/{{post.id}}">{{ post.title }} </a></h2>
+      <h3>{{ post.author }} </h2>
     {% endfor %}
   {% endif %}
 
-  {% block content %}{% endblock %}
+{% endblock %}
   
-</body>
-
-
-</html>

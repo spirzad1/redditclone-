@@ -18,7 +18,7 @@ def home():
             return render_template('header.html')
         for x in top_posts:
             print vars(x)
-        return render_template('header.html', posts=top_posts)
+        return render_template('header.html', posts=top_posts, front=True)
     if request.method == 'POST':
         
         return render_template('write.html')
@@ -109,12 +109,10 @@ def post(post_id):
 
         return render_template('post.html', post=post, comments=comments)
     if request.method == 'POST':
-        print "hi post"
         #Adding to LikesDB
         selection = request.form.get('selection')
         content = request.form.get('content')
         if selection is not None and selection.startswith("post"):
-            print "selection aint none"
             like_type=True
             if selection == 'post_dislike':
                 like_type=False
@@ -140,7 +138,6 @@ def post(post_id):
             db.session.commit()
 
         if selection is not None:
-            print "hi"
             like_type=True
             if selection.startswith('comment_dislike'):
                 like_type=False
@@ -167,13 +164,6 @@ def profile(username):
         #return str("User is " + user.username + "\nMail is " + user.email + "\nPassword is" + user.pass_hash)
     if request.method == 'POST':
         selection = request.form['selection']
-        if selection == 'likes':
-            post_ids = map(lambda x: x.post_id, LikeDB.query.filter_by(username=username).all())
-            print len(post_ids)
-            if len(post_ids) is 0:
-                return "No posts liked"
-            posts = map(lambda x: PostDB.query.filter_by(id=x).all(), post_ids)
-            return render_template('profile.html', posts=posts) #returns the list of all the posts that the current user has liked
 
         if selection == 'posts':
             posts = PostDB.query.filter_by(author=username).all()
@@ -183,7 +173,19 @@ def profile(username):
 
         if selection == 'comments':
             comments = CommentDB.query.filter_by(author=username).all()
-            return render_template('profile.html', posts=comments) #returns the list of all the comments that the current user has written
+            post_ids = map(lambda x: x.post_id, CommentDB.query.filter_by(author=username).all())
+            posts = map(lambda x: PostDB.query.filter_by(id=x).all(), post_ids)
+            for post in posts:
+                print post[0].title
+            return render_template('profile.html', comments=comments, posts=posts) #returns the list of all the comments that the current user has written
+
+        if selection == 'likes':
+            post_ids = map(lambda x: x.post_id, LikeDB.query.filter_by(username=username).all())
+            print len(post_ids)
+            if len(post_ids) is 0:
+                return "No posts liked"
+            posts = map(lambda x: PostDB.query.filter_by(id=x).all(), post_ids)
+            return render_template('profile.html', posts=posts) #returns the list of all the posts that the current user has liked
 
 
 @app.route('/logout')

@@ -1,24 +1,56 @@
 {% extends "header.html" %}
 {% block content %}
+
+   <div class="page-header" id="banner">
+      <div class="row">
+        <div class="col-lg-8 col-md-7 col-sm-6">
+          <h1>Darkly</h1>
+        </div>
+        <div class="col-lg-4 col-md-5 col-sm-6">
+      </div>
+    </div>
+
   {% if current_user.is_authenticated %}
-    <br><br>
     <form  method="post">
-        <button name="selection" type="submit" value="posts">Posts</button>
-        <button name="selection" type="submit" value="comments">Comments</button>
-        <button name="selection" type="submit" value="likes">Likes</button>
+        <button class="btn btn-info-outline" name="selection" type="submit" value="posts">Posts</button>
+        <button class="btn btn-info-outline" name="selection" type="submit" value="comments">Comments</button>
+        <button class="btn btn-info-outline" name="selection" type="submit" value="likes">Likes</button>
       </form>
     <br>
+
+    <!-- if Post -->
+    {% for post in posts %}
+      {% if post.title %}
+        <h1><a href="/posts/{{post.id}}"><br>{{post.title}}</a></h1>
+        <p>{{post.content}}</p>
+      {% endif %}
+    {% endfor %}
+
+    {% if comments %}
+      <!-- if comment -->
+      {% for comment in comments %}
+        <h1>comments</h1>
+        <a href="/posts/{{ comment.post_id }}">
+          {% for post in posts %}
+            {{ post.id }}
+            {% if post.id == comment.post_id %}
+            <h2>{{ post.title }}</h2>
+            {% endif %}
+          {% endfor %}
+        </a>
+        <p>{{ comment.content }}</p>
+      {% endfor %}
+        
+        <!-- if like -->
+        
+    {% endif %}
+
+
+
+
   {% else %}
     <h2>Hi :D</h2>
     <a href="{{ url_for('register') }}">Login or Signup</a>
   {% endif %}
 
-  {% for post in posts %}
-  <h1>Title: <br>{{post.title}}</h1>
-  <h2>Post content: <br>{{post.content}}</h2>
-    {% if post.post_id %}
-      <p>post_id: {{post.post_id}}</p>
-    {% endif %}
-  {% endfor %}
-
-  {% endblock %}
+{% endblock %}
