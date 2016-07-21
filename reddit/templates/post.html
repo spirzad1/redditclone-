@@ -19,8 +19,8 @@
 
   <h2>Comments:</h2>
   {% for comment in comments %}
-    <p>{{comment.content}}</p>
     <h3>{{comment.author}}</h3>
+    <p>{{comment.content}}</p>
     <form action="{{ url_for('post', post_id=post.id) }}" method="post">
       <button name="selection" type="submit" value="comment_like_{{ comment.id}}">Like</button>
       <button name="selection" type="submit" value="comment_dislike_{{ comment.id}}">Dislike</button>

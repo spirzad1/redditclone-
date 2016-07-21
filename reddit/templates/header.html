@@ -6,7 +6,8 @@
   {% if posts is not none and front%}
     {% for post in posts %}
     <h2><a href="/posts/{{post.id}}">{{ post.title }} </a></h2>
-      <h3>{{ post.author }} </h2>
+      <h3><a href="/tags/{{ TagDB.query.filter_by(id=PostTagDB.query.filter_by(post_id=post.id).first().tag_id).first().name }}"> {{ TagDB.query.filter_by(id=PostTagDB.query.filter_by(post_id=post.id).first().tag_id).first().name }}</a> </h2>
+      <h3>{{ post.author }} </h3> 
     {% endfor %}
   {% endif %}
 

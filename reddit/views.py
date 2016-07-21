@@ -18,7 +18,7 @@ def home():
             return render_template('header.html')
         for x in top_posts:
             print vars(x)
-        return render_template('header.html', posts=top_posts, front=True)
+        return render_template('header.html', posts=top_posts, TagDB=TagDB, PostTagDB=PostTagDB, front=True)
     if request.method == 'POST':
         
         return render_template('write.html')
