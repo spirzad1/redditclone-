@@ -6,7 +6,11 @@
 
       <h1>Uh oh!</h1>
       <h3>
-        It seems that URL does not exist :(
+        {% if error %}
+          {{ error }}
+        {% else %}
+          It seems that URL does not exist :(
+        {% endif %}
       </h3>
 
     </div>
