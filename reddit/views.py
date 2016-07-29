@@ -80,6 +80,8 @@ def write():
         title = request.form.get('title')
         content = request.form.get('content')
         new_tag = request.form.get('tag')
+        if title == "" or content == "" or new_tag == "":
+            return render_template('error.html', error="Error: fields not filled out")
         # Create and add post
         post = PostDB(title=title, author=current_user.username, content=content,num_likes=0, time=datetime.now())
         db.session.add(post)
