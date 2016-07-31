@@ -1,14 +1,25 @@
 {% extends "base.html" %}
 
+{% block title %}Front Page{% endblock %}
+
 {% block content %}
 
   <!-- Printing top 50 posts -->
   {% if posts is not none and front%}
     {% for post in posts %}
-    <h2><a href="/posts/{{post.id}}">{{ post.title }} </a></h2>
-      <h3><a href="/tags/{{ TagDB.query.filter_by(id=PostTagDB.query.filter_by(post_id=post.id).first().tag_id).first().name }}"> {{ TagDB.query.filter_by(id=PostTagDB.query.filter_by(post_id=post.id).first().tag_id).first().name }}</a> </h2>
-      <h3>{{ post.author }} </h3> 
+      <div class="posts">
+        <div class="posts_content">
+          <h2>{{ post.num_likes }}     <a href="/posts/{{post.id}}" style="font-size: 30px;">{{ post.title }} </a></h2>
+          <h3 style="font-size: 15px;">Submitted by 
+            <a href="/users/{{post.author}}">{{ post.author }}</a>  
+            to 
+            <a href="/tags/{{ TagDB.query.filter_by(id=PostTagDB.query.filter_by(post_id=post.id).first().tag_id).first().name }}">/tags/{{ TagDB.query.filter_by(id=PostTagDB.query.filter_by(post_id=post.id).first().tag_id).first().name }}</a> 
+          </h3>
+        </div>
+      </div>
     {% endfor %}
+  {% else %}
+    <h2>There are currently no posts! Please <a href="{{ url_for('write') }}">Submit a post</a><h2>
   {% endif %}
 
 {% endblock %}

@@ -1,27 +1,36 @@
-{% extends "header.html" %}
+{% extends "base.html" %}
+
+{% block title %}Login or Signup {% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
 
 {% block content %}
 
 
-  <h1>Login or Signup</h1>
 
+  <!-- User should not be here -> Error -->
   {% if current_user.is_authenticated %}
-    <h2>Hi {{current_user.username}}!:D </h2>
-  {% endif %}
+    <h2>You are already logged in</h2>
+  {% else  %}
 
-  <form class="form-inline" action="{{ url_for('register') }}" name="register" method="POST">
-    <input class="form-control" name="email" placeholder="Email" type="text">
+    <form class="form-inline" action="{{ url_for('register') }}" name="register" method="POST">
+      <div class="form-group">
+        <input class="form-control" name="email" placeholder="Email" type="text">
+      </div>
+      <br>
+      <div class="form-group">
+        <input class="form-control" name="username" placeholder="Username" type="text">
+      </div>
+        <br>
+      <div class="form-group">
+        <input class="form-control" name="password" placeholder="Password" type="password">
+      </div>
+        <br>
+      <input name="login_or_signup" class="btn btn-secondary"type="submit" value="login">
+      <input name="login_or_signup" class="btn btn-secondary"  type="submit" value="signup">
+    </form>
     <br>
-    <input class="form-control" name="username" placeholder="Username" type="text">
-    <br>
-    <input class="form-control" name="password" placeholder="Password" type="password">
-    <br>
-    <input name="login_or_signup" type="submit" value="login">
-    <input name="login_or_signup" type="submit" value="signup">
-  </form>
-  <br>
-  {% if current_user.is_authenticated %}
-    <a href="{{ url_for('logout') }}">Log Out</a>
   {% endif %}
 
 {% endblock %}

@@ -1,16 +1,31 @@
-{% extends "header.html" %}
+{% extends "base.html" %}
+
+{% block title%}Submit a Post {% endblock %}
+
 {% block content %}
+
+  {% if error %}
+    <h3>{{ error }}</h3>
+  {% endif %}
+
   {% if current_user.is_authenticated %}
-    <br><br>
-    <h2>Submit a post:</h2>
     <form action = "{{ url_for('write') }}" name="write" method="POST">
-      Tag<input name="tag" placeholder="" type="text">
+      <div class="form-group">
+        <label for="usr">Tag:</label>
+        <input name="tag" type="text" class="form-control" placeholder="Tag">
+      </div>
       <br>
-      Title<input name="title" placeholder="" type="text">
+      <div class="form-group">
+        <label for="usr">Title:</label>
+      <input name="title" class="form-control" placeholder="Title" type="text">
+      </div>
       <br>
-      Content<input name="content" placeholder="" type="text">
-      <br>
-      <button type="submit">Submit Post</button>
+      <div class="form-group">
+        <label for="usr">Content:</label>
+        <textarea name="content" class="form-control" row="10" placeholder="Content" type="text"></textarea>
+      </div>
+        <br>
+      <button type="submit" class="btn btn-secondary" >Submit Post</button>
     </form>
     <br>
   {% else %}
@@ -20,4 +35,4 @@
     <a href="{{ url_for('register') }}">Login or Signup</a>
   {% endif %}
 
-  {% endblock %}
+{% endblock %}

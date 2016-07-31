@@ -1,43 +1,57 @@
-{% extends "header.html" %}
+{% extends "base.html" %}
+{% block title %}{{ post.title }}
+    <p style="font-size: 13px; padding-left: 30px;">Submitted by <a href="/users/{{post.author }}">{{ post.author }}</a></p>
+{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
 {% block content %}
 
-  <h1>{{ post.title }}</h1>
-  <h3> {{ post.author }}</h3>
-  <p> {{ post.content }} </p>
+  <div class="postdisplay" >
 
-  {% if current_user.is_authenticated %}
-    <br><br>
-    <form action="{{ url_for('post', post_id=post.id) }}"method="post">
-      <button name="selection" type="submit" value="post_like_{{ comment.id }}">Like</button>
-      <button name="selection" type="submit" value="post_dislike_{{ comment.id }}">Dislike</button>
-    </form>
-    <br>
-  {% else %}
-    <h2>Hi :D</h2>
-    <a href="{{ url_for('register') }}">Login or Signup to like</a>
-  {% endif %}
+    <p> {{ post.content }} </p>
 
-  <h2>Comments:</h2>
-  {% for comment in comments %}
-    <h3>{{comment.author}}</h3>
-    <p>{{comment.content}}</p>
-    <form action="{{ url_for('post', post_id=post.id) }}" method="post">
-      <button name="selection" type="submit" value="comment_like_{{ comment.id}}">Like</button>
-      <button name="selection" type="submit" value="comment_dislike_{{ comment.id}}">Dislike</button>
-    </form>
-  {% endfor %}
-
-  {% if current_user.is_authenticated %}
-    <br><br>
-    <h2>Submit a Comment:</h2>
-    <form action="{{ url_for('post', post_id=post.id) }}" name="write" method="POST">
-      Content<input name="content" placeholder="" type="text">
+    {% if current_user.is_authenticated %}
+      <br><br>
+      <form action="{{ url_for('post', post_id=post.id) }}"method="post">
+        <button class="btn btn-secondary" name="selection" type="submit" value="post_lik">Like</button>
+        <button class="btn btn-secondary" name="selection" type="submit" value="post_dislike">Dislike</button>
+      </form>
       <br>
-      <button type="submit">Submit Comment</button>
+    {% else %}
+      <a href="{{ url_for('register') }}">Login or Signup to like</a>
+    {% endif %}
+  </div>
+
+  <div class="postcomment"
+    {% if current_user.is_authenticated %}
+      <br><br>
+      <h2>Submit a Comment:</h2>
+      <form action="{{ url_for('post', post_id=post.id) }}" name="write" method="POST">
+        <textarea name="content" class="form-control" placeholder="Content" type="text"></textarea>
+        <br>
+      <button class="btn btn-secondary" type="submit">Submit Comment</button>
     </form>
     <br>
   {% else %}
     <a href="{{ url_for('register') }}">Login or Signup to Comment</a>
   {% endif %}
+  <br><br><br>
 
-  {% endblock %}
+    {% for comment in comments %}
+      {{ comment.num_likes }}
+      <p>{{comment.content}}</p>
+      <h3>{{comment.author}}</h3>
+      <form action="{{ url_for('post', post_id=post.id) }}" method="post">
+        <button class="btn btn-secondary" name="selection" type="submit" value="comment_like_{{ comment.id}}">Like</button>
+        <button class="btn btn-secondary" name="selection" type="submit" value="comment_dislike_{{ comment.id}}">Dislike</button>
+      </form>
+      <br><br>
+    {% endfor %}
+
+  </div>
+
+{% endblock %}
+

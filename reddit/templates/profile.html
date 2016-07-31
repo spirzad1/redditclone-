@@ -1,52 +1,40 @@
-{% extends "header.html" %}
-{% block content %}
+{% extends "base.html" %}
 
-   <div class="page-header" id="banner">
-      <div class="row">
-        <div class="col-lg-8 col-md-7 col-sm-6">
-          <h1>Darkly</h1>
-        </div>
-        <div class="col-lg-4 col-md-5 col-sm-6">
-      </div>
-    </div>
+{% block title %}{{current_user.username}}{% endblock %}
+{% block content %}
 
   {% if current_user.is_authenticated %}
     <form  method="post">
         <button class="btn btn-info-outline" name="selection" type="submit" value="posts">Posts</button>
         <button class="btn btn-info-outline" name="selection" type="submit" value="comments">Comments</button>
-        <button class="btn btn-info-outline" name="selection" type="submit" value="likes">Likes</button>
+        <button class="btn btn-info-outline" name="selection" type="submit" value="likes">Liked</button>
       </form>
     <br>
 
     <!-- if Post -->
-    {% for post in posts %}
-      {% if post.title %}
-        <h1><a href="/posts/{{post.id}}"><br>{{post.title}}</a></h1>
-        <p>{{post.content}}</p>
-      {% endif %}
-    {% endfor %}
+    {% if posts %}
+      {% for post in posts %}
+        {% if post.title %}
+          <h1><a href="/posts/{{post.id}}"><br>{{post.title}}</a></h1>
+          <p>{{post.content}}</p>
+        {% endif %}
+      {% endfor %}
 
-    {% if comments %}
+    {% elif comments %}
       <!-- if comment -->
       {% for comment in comments %}
-        <h1>comments</h1>
-        <a href="/posts/{{ comment.post_id }}">
-          {% for post in posts %}
-            {{ post.id }}
-            {% if post.id == comment.post_id %}
-            <h2>{{ post.title }}</h2>
-            {% endif %}
-          {% endfor %}
-        </a>
+      <a href="/posts/{{ PostDB.query.filter_by(id=comment.post_id).first().post_id}}">{{ PostDB.query.filter_by(id=comment.post_id).first().title }}</a>
         <p>{{ comment.content }}</p>
       {% endfor %}
-        
+    {% else %}
         <!-- if like -->
-        
+        {% for post in post_like %}
+          <a href="/posts/{{ post[0].id }}">{{ post[0].title}}</a>
+          <h3 style="font-size: 15px;">Submitted by 
+            <a href="/users/{{ post[0].author }}">{{ post[0].author }}</a>
+          </h3>
+        {% endfor %}
     {% endif %}
-
-
-
 
   {% else %}
     <h2>Hi :D</h2>
