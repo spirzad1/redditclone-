@@ -106,7 +106,7 @@ def post(post_id):
     if request.method == 'GET':
         post = PostDB.query.filter_by(id=post_id).first()
         if post is None:
-            return render_template('error.html')
+            return render_template('error.html', error="That post doesn't exist!")
         comments = CommentDB.query.filter_by(post_id=post_id).all()
 
         return render_template('post.html', post=post, comments=comments)
@@ -184,7 +184,7 @@ def profile(username):
     if request.method == 'GET':
         user = UserDB.query.filter_by(username=username).first()
         if user is None:
-            return render_template('profile.html')
+            return render_template('error.html', error="That user doesn't exist!")
         posts = PostDB.query.filter_by(author=username).all()
 
         #if no posts exist

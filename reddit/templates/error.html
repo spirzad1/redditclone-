@@ -1,15 +1,20 @@
 {% extends "header.html" %}
+{% block title %}Uh oh!{% endblock %}
+{% block header %}
+  {{ super() }}
+{% endblock %}
+
 {% block content %}
   <header class="intro">
 
-    <div class="intro-body">
+    <div class="intro-body" style="text-align: center;">
 
-      <h1>Uh oh!</h1>
+      <h1>It seems something went wrong!</h1>
       <h3>
         {% if error %}
           {{ error }}
         {% else %}
-          It seems that URL does not exist :(
+          That URL does not exist :(
         {% endif %}
       </h3>
 

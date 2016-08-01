@@ -18,6 +18,8 @@
         <button class="" style="background-color: Transparent; border: none;"  name="selection" type="submit" value="post_like">
           <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
         </button>
+    {% endif %}
+    {% if current_user.is_authenticated %}
         <h3 style="text-align: center; margin: 0 0 0 0;">{{ post.num_likes }}</h3>
 
         <button class="" style="background-color: Transparent; border: none;" name="selection" type="submit" value="post_dislike">
@@ -43,26 +45,32 @@
     </form>
     <br>
   {% else %}
-    <a href="{{ url_for('register') }}">Login or Signup to Comment</a>
+  <h2><a href="{{ url_for('register') }}">Login or Signup to Comment</a></h2>
   {% endif %}
   <br><br><br>
 
     {% for comment in comments %}
       <div class="row">
         <div class="col-md-1">
+        {% if current_user.is_authenticated %}
           <form action="{{ url_for('post', post_id=post.id) }}" method="post">
             <button class="" style="background-color: Transparent; border: none;"name="selection" type="submit" value="comment_like_{{ comment.id}}">
               <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
             </button>
+        {% endif %}
           <h3 style="text-align: center; margin: 0 0 0 0;">{{ comment.num_likes }} </h3>
 
+        {% if current_user.is_authenticated %}
             <button class="" style="background-color: Transparent; border: none;" name="selection" type="submit" value="comment_dislike_{{ comment.id}}">
               <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
             </button>
           </form>
+        {% endif %}
         </div>
         <div class="col-md-11">
-          <h3>{{comment.content}}</h3>
+          <h3>
+            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+            {{comment.content}}</h3>
           <p class="post-meta">Submitted by 
             <a href="users/{{ url_for('profile', username=comment.author) }}">{{comment.author}}</a>
           </p>
