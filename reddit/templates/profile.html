@@ -12,27 +12,59 @@
     <br>
 
     <!-- if Post -->
-    {% if posts %}
+    {% if posts%}
       {% for post in posts %}
-        {% if post.title %}
-          <h1><a href="/posts/{{post.id}}"><br>{{post.title}}</a></h1>
-          <p>{{post.content}}</p>
-        {% endif %}
+        <div class="row">
+          <div class="col-md-1">
+            <h2>{{ post.num_likes }}</h2>
+          </div>
+          <div class="col-md-11">
+            <h2><a href="/posts/{{post.id}}">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                {{post.title}}</a>
+            </h2>
+            <p>{{post.content}}</p>
+          </div>
+        </div>
       {% endfor %}
+    {% endif %}
 
-    {% elif comments %}
+    {% if comments %}
       <!-- if comment -->
       {% for comment in comments %}
-      <a href="/posts/{{ PostDB.query.filter_by(id=comment.post_id).first().post_id}}">{{ PostDB.query.filter_by(id=comment.post_id).first().title }}</a>
-        <p>{{ comment.content }}</p>
+        <div class="row">
+          <div class="col-md-1">
+            <h2>{{ comment.num_likes }}</h2>
+          </div>
+          <div class="col-md-11">
+            <h2>
+              <a href="/posts/{{ PostDB.query.filter_by(id=comment.post_id).first().post_id}}">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                {{ PostDB.query.filter_by(id=comment.post_id).first().title }}
+              </a>
+            </h2>
+            <p>{{ comment.content }}</p>
+          </div>
+        </div>
       {% endfor %}
     {% else %}
         <!-- if like -->
         {% for post in post_like %}
-          <a href="/posts/{{ post[0].id }}">{{ post[0].title}}</a>
-          <h3 style="font-size: 15px;">Submitted by 
-            <a href="/users/{{ post[0].author }}">{{ post[0].author }}</a>
-          </h3>
+          <div class="row">
+            <div class="col-md-1">
+              <h2>{{ post[0].num_likes }}</h2>
+            </div>
+            <div class="col-md-11">
+              <h2><a href="/posts/{{ post[0].id }}">
+                  <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                  {{ post[0].title}}
+                </a>
+              </h2>
+              <h3 style="font-size: 15px;">Submitted by 
+                <a href="/users/{{ post[0].author }}">{{ post[0].author }}</a>
+              </h3>
+            </div>
+          </div>
         {% endfor %}
     {% endif %}
 

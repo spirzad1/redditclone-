@@ -1,11 +1,28 @@
 {% extends "base.html" %}
+{% block title %} /tags/{{ tag }} {% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
 {% block content %}
-  <h1>{{ tag }}</h2>
-  <br><br>
   {% for post in posts %}
-  <h2>Posts: <br><br>Title: {{ post.title }} </h2>
-    <h2>{{ post.author }} </h2>
-    <h2>{{ post.content }} </h2>
+  <div class="row">
+    <div class="col-md-1">
+      <h2>{{ post.num_likes }}</h2>
+    </div>
+    <div class="col-md-11">
+      <h2> 
+        <a href="/posts/{{post.id}}" style="font-size: 30px;">
+          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+          {{ post.title }}
+        </a>
+      </h2>
+      <h3 style="font-size: 15px;">Submitted by
+        <a href="/users/{{post.author}}">{{ post.author }}</a>
+      </h3>
+    </div>
+  </div>
   {% endfor %}
 
 {% endblock %}

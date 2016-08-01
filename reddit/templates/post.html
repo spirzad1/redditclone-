@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ post.title }}
-    <p style="font-size: 13px; padding-left: 30px;">Submitted by <a href="/users/{{post.author }}">{{ post.author }}</a></p>
+    <h3 style="font-size: 13px; padding-left: 30px;">Submitted by <a href="/users/{{post.author }}" style="color: #FFF !important;">{{ post.author }}</a></h3>
 {% endblock %}
 
 {% block head %}
@@ -9,23 +9,30 @@
 
 {% block content %}
 
-  <div class="postdisplay" >
+  <div class="row" >
 
-    <p> {{ post.content }} </p>
-
+    <div class="col-md-1">
     {% if current_user.is_authenticated %}
       <br><br>
       <form action="{{ url_for('post', post_id=post.id) }}"method="post">
-        <button class="btn btn-secondary" name="selection" type="submit" value="post_lik">Like</button>
-        <button class="btn btn-secondary" name="selection" type="submit" value="post_dislike">Dislike</button>
+        <button class="" style="background-color: Transparent; border: none;"  name="selection" type="submit" value="post_like">
+          <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+        </button>
+        <h3 style="text-align: center; margin: 0 0 0 0;">{{ post.num_likes }}</h3>
+
+        <button class="" style="background-color: Transparent; border: none;" name="selection" type="submit" value="post_dislike">
+          <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+        </button>
       </form>
       <br>
-    {% else %}
-      <a href="{{ url_for('register') }}">Login or Signup to like</a>
     {% endif %}
+    </div>
+    <div class="col-md-11">
+      <p> {{ post.content }} </p>
+    </div>
   </div>
 
-  <div class="postcomment"
+  <div class="postcomment">
     {% if current_user.is_authenticated %}
       <br><br>
       <h2>Submit a Comment:</h2>
@@ -41,14 +48,27 @@
   <br><br><br>
 
     {% for comment in comments %}
-      {{ comment.num_likes }}
-      <p>{{comment.content}}</p>
-      <h3>{{comment.author}}</h3>
-      <form action="{{ url_for('post', post_id=post.id) }}" method="post">
-        <button class="btn btn-secondary" name="selection" type="submit" value="comment_like_{{ comment.id}}">Like</button>
-        <button class="btn btn-secondary" name="selection" type="submit" value="comment_dislike_{{ comment.id}}">Dislike</button>
-      </form>
-      <br><br>
+      <div class="row">
+        <div class="col-md-1">
+          <form action="{{ url_for('post', post_id=post.id) }}" method="post">
+            <button class="" style="background-color: Transparent; border: none;"name="selection" type="submit" value="comment_like_{{ comment.id}}">
+              <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+            </button>
+          <h3 style="text-align: center; margin: 0 0 0 0;">{{ comment.num_likes }} </h3>
+
+            <button class="" style="background-color: Transparent; border: none;" name="selection" type="submit" value="comment_dislike_{{ comment.id}}">
+              <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+            </button>
+          </form>
+        </div>
+        <div class="col-md-11">
+          <h3>{{comment.content}}</h3>
+          <p class="post-meta">Submitted by 
+            <a href="users/{{ url_for('profile', username=comment.author) }}">{{comment.author}}</a>
+          </p>
+          <br><br>
+        </div>
+      </div>
     {% endfor %}
 
   </div>

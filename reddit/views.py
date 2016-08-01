@@ -145,6 +145,7 @@ def post(post_id):
                 post.num_likes -= 1
 
             db.session.commit()
+            return redirect(url_for('post', post_id=post_id))
 
         # User wants to add a comment. Assume user is logged in
         if content is not None:
@@ -168,9 +169,8 @@ def post(post_id):
             like.like_type = like_type
 
             comment = CommentDB.query.filter_by(id=selection.split("_")[2]).first()
+            print comment.content
             if like_type:
-                if comment.num_likes is 0:
-                    comment.num_likes = 1
                 comment.num_likes += 1
             else:
                 comment.num_likes -= 1
@@ -185,7 +185,10 @@ def profile(username):
         user = UserDB.query.filter_by(username=username).first()
         if user is None:
             return render_template('profile.html')
-        return render_template('profile.html')
+        posts = PostDB.query.filter_by(author=username).all()
+
+        #if no posts exist
+        return render_template('profile.html', posts=posts)
         #return str("User is " + user.username + "\nMail is " + user.email + "\nPassword is" + user.pass_hash)
     if request.method == 'POST':
         selection = request.form['selection']

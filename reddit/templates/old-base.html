@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+      <meta charset="utf-8">
+      <title>Reddit Clone</title>
+      <link href="../static/css/style.css" rel="stylesheet">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
+        <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
+        <script src="../bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    {% endblock %}
+  </head>
+  <body>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="../" class="navbar-brand">Reddit</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+
+          <ul class="nav navbar-nav navbar-right">
+            {% if current_user.is_authenticated %}
+              <li><a href="{{ url_for('write') }}" target="_self">Submit a Post</a></li>
+              <li><a href="{{ url_for('profile', username=current_user.username) }}" target="_self">Profile</a></li>
+              <li><a href="{{ url_for('logout') }}" target="_self">Logout</a></li>
+            {% else %}
+              <li><a href="{{ url_for('register') }}" target="_self">Signup or Login</a></li>
+            {% endif %}
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container">
+
+      <div class="page-header">
+        <div class="row">
+          <div class="col-lg-8 col-md-7 col-sm-6">
+            <br>
+            <h1>{% block title %}{% endblock %}</h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="bs-docs-section clearfix">
+        {% block content %}{% endblock %}
+
+      </div>
+
+
+
+    </div>
+
+
+  </body>
+</html>
