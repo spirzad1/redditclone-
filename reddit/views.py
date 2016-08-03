@@ -10,7 +10,7 @@ from sqlalchemy import desc
 def load_user(id):
     return UserDB.query.get(int(id))
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def home():
     if request.method == 'GET':
         top_posts = PostDB.query.order_by(desc(PostDB.num_likes)).limit(50).all()
@@ -19,9 +19,6 @@ def home():
         for x in top_posts:
             print vars(x)
         return render_template('header.html', posts=top_posts, TagDB=TagDB, PostTagDB=PostTagDB, front=True)
-    if request.method == 'POST':
-        
-        return render_template('write.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -188,7 +185,7 @@ def profile(username):
         posts = PostDB.query.filter_by(author=username).all()
 
         #if no posts exist
-        return render_template('profile.html', posts=posts)
+        return render_template('profile.html', posts=posts, user=username)
         #return str("User is " + user.username + "\nMail is " + user.email + "\nPassword is" + user.pass_hash)
     if request.method == 'POST':
         selection = request.form['selection']
@@ -199,21 +196,21 @@ def profile(username):
             #if no posts exist
             if posts is None:
                 return redirect(url_for('write', message="There are currently no posts existing. Be the first!"))
-            return render_template('profile.html', posts=posts)
+            return render_template('profile.html', posts=posts, user=username)
 
         if selection == 'comments':
             comments = CommentDB.query.filter_by(author=username).all()
             post_ids = map(lambda x: x.post_id, comments)
             posts = map(lambda x: PostDB.query.filter_by(id=x).all(), post_ids)
 
-            return render_template('profile.html', comments=comments, PostDB=PostDB) #returns the list of all the comments that the current user has written
+            return render_template('profile.html', comments=comments, PostDB=PostDB, user=username) #returns the list of all the comments that the current user has written
 
         if selection == 'likes':
             post_ids = map(lambda x: x.post_id, LikeDB.query.filter_by(username=username, post_or_comment=1).all())
             posts = map(lambda x: PostDB.query.filter_by(id=x).all(), post_ids)
             for post in posts:
                 print post[0].title
-            return render_template('profile.html', post_like=posts) #returns the list of all the posts that the current user has liked
+            return render_template('profile.html', post_like=posts, user=username) #returns the list of all the posts that the current user has liked
 
 
 @app.route('/logout')

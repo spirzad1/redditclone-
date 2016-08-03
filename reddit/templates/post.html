@@ -72,7 +72,7 @@
             <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
             {{comment.content}}</h3>
           <p class="post-meta">Submitted by 
-            <a href="users/{{ url_for('profile', username=comment.author) }}">{{comment.author}}</a>
+            <a href="{{ url_for('profile', username=comment.author) }}">{{comment.author}}</a>
           </p>
           <br><br>
         </div>

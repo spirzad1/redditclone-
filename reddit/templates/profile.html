@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{current_user.username}}{% endblock %}
+{% block title %}{{user}}{% endblock %}
 {% block content %}
 
   {% if current_user.is_authenticated %}
@@ -38,7 +38,7 @@
           </div>
           <div class="col-md-11">
             <h2>
-              <a href="/posts/{{ PostDB.query.filter_by(id=comment.post_id).first().post_id}}">
+              <a href="/posts/{{ PostDB.query.filter_by(id=comment.post_id).first().id }}">
                 <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
                 {{ PostDB.query.filter_by(id=comment.post_id).first().title }}
               </a>
